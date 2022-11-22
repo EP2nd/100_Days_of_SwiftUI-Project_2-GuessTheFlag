@@ -12,6 +12,10 @@ struct ContentView: View {
     @State private var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"].shuffled()
 
     @State private var correctAnswer = Int.random(in: 0...2)
+    /// Challenge 1:
+    @State private var score = 0
+    @State private var correctAnswers = 0
+    @State private var incorrectAnswers = 0
 
     @State private var showingScore = false
     
@@ -58,11 +62,18 @@ struct ContentView: View {
                 .alert(scoreTitle, isPresented: $showingScore) {
                     Button("Continue", action: askQuestion)
                 } message: {
-                    Text("Your score is ???")
+                    /// Challenge 3:
+                    if score < 8 {
+                        /// Challenge 1:
+                        Text("You got it right \(correctAnswers) time(s)\nand you failed \(incorrectAnswers) time(s).")
+                    } else {
+                        Text("Game over!\nYou got it right \(correctAnswer) time(s) and you failed \(incorrectAnswers) time(s). Your overall score is \(score).\nTap Continue to restart the game,")
+                    }
                 }
                 Spacer()
                 Spacer()
-                Text("Score: ???")
+                /// Challenge 1:
+                Text("Score: \(score)")
                     .foregroundColor(.white)
                     .font(.title.bold())
                 Spacer()
@@ -73,16 +84,31 @@ struct ContentView: View {
     
     func flagTapped(_ number: Int) {
         if number == correctAnswer {
-            scoreTitle = "Correct"
+            scoreTitle = "Correct!"
+            /// Challenge 1:
+            score += 1
+            correctAnswers += 1
         } else {
-            scoreTitle = "Wrong"
+            /// Challenge 2:
+            scoreTitle = "Wrong! That's the flag of \(countries[number])."
+            /// Challenge 1:
+            score -= 1
+            incorrectAnswers += 1
         }
         showingScore = true
     }
     
     func askQuestion() {
+        
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
+        
+        /// Challenge 3:
+        if correctAnswers + incorrectAnswers == 8 {
+            score = 0
+            correctAnswer = 0
+            incorrectAnswers = 0
+        }
     }
 }
 
