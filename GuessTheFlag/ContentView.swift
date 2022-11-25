@@ -7,6 +7,13 @@
 
 import SwiftUI
 
+/// Project 3, challenge 3:
+extension View {
+    func titleStyle() -> some View {
+        modifier(Title())
+    }
+}
+
 struct ContentView: View {
     
     @State private var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"].shuffled()
@@ -30,10 +37,12 @@ struct ContentView: View {
                 .ignoresSafeArea()
             VStack {
                 Spacer()
+                /// Project 3, challenge 3:
                 Text("Guess the Flag")
-                    .font(.largeTitle.weight(.bold))
+                    .titleStyle()
+                    /* .font(.largeTitle.weight(.bold))
                     // .font(.largeTitle.bold())
-                    .foregroundColor(.white)
+                    .foregroundColor(.white) */
                 VStack(spacing: 15) {
                     VStack {
                         Text("Tap the flag of")
@@ -141,6 +150,15 @@ struct FlagView: View {
             .renderingMode(.original)
             .clipShape(Capsule())
             .shadow(radius: 5)
+    }
+}
+
+/// Project 3, challenge 3:
+struct Title: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.largeTitle.bold())
+            .foregroundColor(.white)
     }
 }
 
