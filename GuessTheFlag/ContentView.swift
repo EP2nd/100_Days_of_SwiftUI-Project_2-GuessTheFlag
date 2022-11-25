@@ -48,10 +48,12 @@ struct ContentView: View {
                         Button {
                             flagTapped(number)
                         } label: {
-                            Image(countries[number])
+                            /// Project 3, challenge 2:
+                            FlagView(text: countries[number])
+                            /* Image(countries[number])
                                 .renderingMode(.original)
                                 .clipShape(Capsule())
-                                .shadow(radius: 5)
+                                .shadow(radius: 5) */
                         }
                     }
                 }
@@ -126,6 +128,19 @@ struct ContentView: View {
             correctAnswers = 0
             incorrectAnswers = 0
         }
+    }
+}
+
+/// Project 3, challenge 2:
+struct FlagView: View {
+    
+    var text: String
+    
+    var body: some View {
+        Image(text)
+            .renderingMode(.original)
+            .clipShape(Capsule())
+            .shadow(radius: 5)
     }
 }
 
