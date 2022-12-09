@@ -23,6 +23,9 @@ struct ContentView: View {
     @State private var score = 0
     @State private var correctAnswers = 0
     @State private var incorrectAnswers = 0
+    /// Project 6, challenge 1:
+    @State private var animationAmount = 0.0
+    @State private var tappedFlag = 0
 
     @State private var showingScore = false
     
@@ -55,6 +58,10 @@ struct ContentView: View {
                     
                     ForEach(0..<3) { number in
                         Button {
+                            /// Project 6, challenge 1:
+                            withAnimation() {
+                                animationAmount += 360
+                            }
                             flagTapped(number)
                         } label: {
                             /// Project 3, challenge 2:
@@ -64,6 +71,8 @@ struct ContentView: View {
                                 .clipShape(Capsule())
                                 .shadow(radius: 5) */
                         }
+                        /// Project 6, challenge 1:
+                        .rotation3DEffect(.degrees(tappedFlag == number ? animationAmount : 0), axis: (x: 0, y: 1, z: 0))
                     }
                 }
                 .frame(maxWidth: .infinity)
