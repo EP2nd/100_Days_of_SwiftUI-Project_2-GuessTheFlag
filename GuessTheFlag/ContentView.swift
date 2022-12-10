@@ -25,7 +25,9 @@ struct ContentView: View {
     @State private var incorrectAnswers = 0
     /// Project 6, challenge 1:
     @State private var animationAmount = 0.0
-    @State private var tappedFlag = 0
+    @State private var tappedButton = 0
+    /// Project 6, challenge 2:
+    @State private var didButtonsFadeOut = false
 
     @State private var showingScore = false
     
@@ -44,7 +46,7 @@ struct ContentView: View {
                 Text("Guess the Flag")
                     .titleStyle()
                     /* .font(.largeTitle.weight(.bold))
-                    // .font(.largeTitle.bold())
+//                  .font(.largeTitle.bold())
                     .foregroundColor(.white) */
                 VStack(spacing: 15) {
                     VStack {
@@ -59,20 +61,32 @@ struct ContentView: View {
                     ForEach(0..<3) { number in
                         Button {
                             /// Project 6, challenge 1:
-                            withAnimation() {
+                            tappedButton = number
+                            /// Project 6, challenge 1:
+                            withAnimation(.interpolatingSpring(stiffness: 10, damping: 5)) {
                                 animationAmount += 360
                             }
+                            /// Project 6, challenge 2:
+                            didButtonsFadeOut.toggle()
+                            
                             flagTapped(number)
+                            
                         } label: {
-                            /// Project 3, challenge 2:
-                            FlagView(text: countries[number])
                             /* Image(countries[number])
                                 .renderingMode(.original)
                                 .clipShape(Capsule())
                                 .shadow(radius: 5) */
+                            
+                            /// Project 3, challenge 2:
+                            FlagView(text: countries[number])
+                            
+                            /// Project 6, challenge 1:
+                            .rotation3DEffect(.degrees(tappedButton == number ? animationAmount : 0), axis: (x: 0, y: 1, z: 0))
+                            /// Project 6, challenge 2:
+                            .opacity(didButtonsFadeOut && tappedButton != number ? 0.25 : 1)
+                            /// Project 6, challenge 3:
+                            .animation(.easeInOut(duration: 0.5), value: didButtonsFadeOut && tappedButton != number ? 3 : 0)
                         }
-                        /// Project 6, challenge 1:
-                        .rotation3DEffect(.degrees(tappedFlag == number ? animationAmount : 0), axis: (x: 0, y: 1, z: 0))
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -103,6 +117,7 @@ struct ContentView: View {
     }
     
     func flagTapped(_ number: Int) {
+        
         if number == correctAnswer {
             /// Challenge 3:
             if correctAnswers + incorrectAnswers == 7 {
@@ -132,14 +147,19 @@ struct ContentView: View {
                 incorrectAnswers += 1
             }
         }
-        showingScore = true
+        /// Used GCD syntax to display alerts with a delay not to cover the animations:
+//      showingScore = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            showingScore = true
+        }
     }
     
     func askQuestion() {
         
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
-        
+        /// Project 6, challenge 2:
+        didButtonsFadeOut.toggle()
         /// Challenge 3:
         if correctAnswers + incorrectAnswers == 8 {
             score = 0
