@@ -16,7 +16,7 @@ extension View {
 
 struct ContentView: View {
     
-    @State private var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"].shuffled()
+    @State private var countries = allCountries.shuffled()
 
     @State private var correctAnswer = Int.random(in: 0...2)
     /// Challenge 1:
@@ -33,6 +33,8 @@ struct ContentView: View {
     
     @State private var scoreTitle = ""
     
+    static let allCountries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"]
+    
     var body: some View {
         ZStack {
             RadialGradient(stops: [
@@ -46,7 +48,7 @@ struct ContentView: View {
                 Text("Guess the Flag")
                     .titleStyle()
                     /* .font(.largeTitle.weight(.bold))
-//                  .font(.largeTitle.bold())
+                    // Shorter: .font(.largeTitle.bold())
                     .foregroundColor(.white) */
                 VStack(spacing: 15) {
                     VStack {
@@ -101,7 +103,7 @@ struct ContentView: View {
                         /// Challenge 1:
                         Text("You got it right \(correctAnswers) time(s)\nand you failed \(incorrectAnswers) time(s).")
                     } else {
-                        Text("\nYou got it right \(correctAnswers) time(s)\nand you failed \(incorrectAnswers) time(s).\nYour overall score is \(score).\n\nTap \"Continue\" to restart the game.")
+                        Text("\nYou got it right \(correctAnswers) time(s)\nand you failed \(incorrectAnswers) time(s).\nYour overall score was \(score).\n\nTap \"Continue\" to restart the game.")
                     }
                 }
                 Spacer()
@@ -117,6 +119,9 @@ struct ContentView: View {
     }
     
     func flagTapped(_ number: Int) {
+        
+        let needsArticle = ["UK", "US"]
+        let playersAnswer = countries[number]
         
         if number == correctAnswer {
             /// Challenge 3:
@@ -135,13 +140,21 @@ struct ContentView: View {
             /// Challenge 3:
             if correctAnswers + incorrectAnswers == 7 {
                 /// Challenge 2:
-                scoreTitle = "Game over!\nAnd wrong, by the way:\nthat's the flag of \(countries[number])."
+                if needsArticle.contains(playersAnswer) {
+                    scoreTitle = "Game over!\nAnd wrong, by the way:\nthat's the flag of the \(playersAnswer)."
+                } else {
+                    scoreTitle = "Game over!\nAnd wrong, by the way:\nthat's the flag of \(playersAnswer)."
+                }
                 /// Challenge 1:
                 score -= 1
                 incorrectAnswers += 1
             } else {
                 /// Challenge 2:
-                scoreTitle = "Wrong! That's the flag of \(countries[number])."
+                if needsArticle.contains(playersAnswer) {
+                    scoreTitle = "Wrong! That's the flag of the \(playersAnswer)."
+                } else {
+                    scoreTitle = "Wrong! That's the flag of \(playersAnswer)."
+                }
                 /// Challenge 1:
                 score -= 1
                 incorrectAnswers += 1
@@ -155,13 +168,14 @@ struct ContentView: View {
     }
     
     func askQuestion() {
-        
+        countries.remove(at: correctAnswer)
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
         /// Project 6, challenge 2:
         didButtonsFadeOut.toggle()
         /// Challenge 3:
         if correctAnswers + incorrectAnswers == 8 {
+            countries = Self.allCountries
             score = 0
             correctAnswers = 0
             incorrectAnswers = 0
