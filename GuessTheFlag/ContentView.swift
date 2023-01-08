@@ -33,6 +33,7 @@ struct ContentView: View {
     
     @State private var scoreTitle = ""
     
+    @State private var counrtiesWithArticle = ["UK", "US"]
     static let allCountries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"]
     
     var body: some View {
@@ -55,7 +56,7 @@ struct ContentView: View {
                         Text("Tap the flag of")
                             .font(.subheadline.weight(.heavy))
                             .foregroundColor(.white)
-                        Text(countries[correctAnswer])
+                        Text(withOrWithoutArticle())
                             .foregroundStyle(.secondary)
                             .font(.largeTitle.weight(.semibold))
                     }
@@ -118,9 +119,16 @@ struct ContentView: View {
         }
     }
     
+    func withOrWithoutArticle() -> String {
+        if counrtiesWithArticle.contains(countries[correctAnswer]) {
+            return "the \(countries[correctAnswer])"
+        } else {
+            return "\(countries[correctAnswer])"
+        }
+    }
+    
     func flagTapped(_ number: Int) {
         
-        let needsArticle = ["UK", "US"]
         let playersAnswer = countries[number]
         
         if number == correctAnswer {
@@ -140,7 +148,7 @@ struct ContentView: View {
             /// Challenge 3:
             if correctAnswers + incorrectAnswers == 7 {
                 /// Challenge 2:
-                if needsArticle.contains(playersAnswer) {
+                if counrtiesWithArticle.contains(playersAnswer) {
                     scoreTitle = "Game over!\nAnd wrong, by the way:\nthat's the flag of the \(playersAnswer)."
                 } else {
                     scoreTitle = "Game over!\nAnd wrong, by the way:\nthat's the flag of \(playersAnswer)."
@@ -150,7 +158,7 @@ struct ContentView: View {
                 incorrectAnswers += 1
             } else {
                 /// Challenge 2:
-                if needsArticle.contains(playersAnswer) {
+                if counrtiesWithArticle.contains(playersAnswer) {
                     scoreTitle = "Wrong! That's the flag of the \(playersAnswer)."
                 } else {
                     scoreTitle = "Wrong! That's the flag of \(playersAnswer)."
