@@ -8,16 +8,25 @@
 import SwiftUI
 
 /// Project 3, challenge 3:
+struct TitleModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.largeTitle.bold())
+            .foregroundColor(.white)
+    }
+}
+
+/// Project 3, challenge 3:
 extension View {
-    func titleStyle() -> some View {
-        modifier(Title())
+    func styledTitle() -> some View {
+        modifier(TitleModifier())
     }
 }
 
 struct ContentView: View {
     
     @State private var countries = allCountries.shuffled()
-
+    
     @State private var correctAnswer = Int.random(in: 0...2)
     /// Challenge 1:
     @State private var score = 0
@@ -28,7 +37,7 @@ struct ContentView: View {
     @State private var tappedButton = 0
     /// Project 6, challenge 2:
     @State private var didButtonsFadeOut = false
-
+    
     @State private var showingScore = false
     
     @State private var scoreTitle = ""
@@ -42,15 +51,15 @@ struct ContentView: View {
                 .init(color: Color(red: 0.1, green: 0.2, blue: 0.45), location: 0.3),
                 .init(color: Color(red: 0.76, green: 0.15, blue: 0.26), location: 0.3),
             ], center: .top, startRadius: 200, endRadius: 700)
-                .ignoresSafeArea()
+            .ignoresSafeArea()
             VStack {
                 Spacer()
                 /// Project 3, challenge 3:
                 Text("Guess the Flag")
-                    .titleStyle()
-                    /* .font(.largeTitle.weight(.bold))
-                    // Shorter: .font(.largeTitle.bold())
-                    .foregroundColor(.white) */
+                    .styledTitle()
+                /* .font(.largeTitle.weight(.bold))
+                 // Shorter: .font(.largeTitle.bold())
+                 .foregroundColor(.white) */
                 VStack(spacing: 15) {
                     VStack {
                         Text("Tap the flag of")
@@ -76,19 +85,19 @@ struct ContentView: View {
                             
                         } label: {
                             /* Image(countries[number])
-                                .renderingMode(.original)
-                                .clipShape(Capsule())
-                                .shadow(radius: 5) */
+                             .renderingMode(.original)
+                             .clipShape(Capsule())
+                             .shadow(radius: 5) */
                             
                             /// Project 3, challenge 2:
-                            FlagView(text: countries[number])
+                            FlagImage(name: countries[number])
                             
                             /// Project 6, challenge 1:
-                            .rotation3DEffect(.degrees(tappedButton == number ? animationAmount : 0), axis: (x: 0, y: 1, z: 0))
+                                .rotation3DEffect(.degrees(tappedButton == number ? animationAmount : 0), axis: (x: 0, y: 1, z: 0))
                             /// Project 6, challenge 2:
-                            .opacity(didButtonsFadeOut && tappedButton != number ? 0.25 : 1)
+                                .opacity(didButtonsFadeOut && tappedButton != number ? 0.25 : 1)
                             /// Project 6, challenge 3:
-                            .animation(.easeInOut(duration: 0.5), value: didButtonsFadeOut && tappedButton != number ? 3 : 0)
+                                .animation(.easeInOut(duration: 0.5), value: didButtonsFadeOut && tappedButton != number ? 3 : 0)
                         }
                     }
                 }
@@ -169,7 +178,7 @@ struct ContentView: View {
             }
         }
         /// Used GCD syntax to display alerts with a delay not to cover the animations:
-//      showingScore = true
+        //      showingScore = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             showingScore = true
         }
@@ -188,28 +197,6 @@ struct ContentView: View {
             correctAnswers = 0
             incorrectAnswers = 0
         }
-    }
-}
-
-/// Project 3, challenge 2:
-struct FlagView: View {
-    
-    var text: String
-    
-    var body: some View {
-        Image(text)
-            .renderingMode(.original)
-            .clipShape(Capsule())
-            .shadow(radius: 5)
-    }
-}
-
-/// Project 3, challenge 3:
-struct Title: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-            .font(.largeTitle.bold())
-            .foregroundColor(.white)
     }
 }
 
