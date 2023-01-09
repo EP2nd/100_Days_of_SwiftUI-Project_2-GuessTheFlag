@@ -96,6 +96,9 @@ struct ContentView: View {
                                 .rotation3DEffect(.degrees(tappedButton == number ? animationAmount : 0), axis: (x: 0, y: 1, z: 0))
                             /// Project 6, challenge 2:
                                 .opacity(didButtonsFadeOut && tappedButton != number ? 0.25 : 1)
+                                .scaleEffect(didButtonsFadeOut && tappedButton != number ? 0.75 : 1)
+//                                .saturation(didButtonsFadeOut && tappedButton != number ? 0 : 1)
+//                                .blur(radius: didButtonsFadeOut && tappedButton != number ? 0 : 3)
                             /// Project 6, challenge 3:
                                 .animation(.easeInOut(duration: 0.5), value: didButtonsFadeOut && tappedButton != number ? 3 : 0)
                         }
